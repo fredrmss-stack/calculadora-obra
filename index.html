@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Calculadora de Tijolos para Parede | Grátis</title>
+  <meta name="description" content="Calcule gratuitamente quantos tijolos ou blocos você precisa para construir uma parede. Informe largura, altura, portas e janelas.">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #17212b;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d8dee4;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 25px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 14px rgba(0,0,0,.08);
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px;
+      border: 0;
+      border-radius: 8px;
+      background: #1473e6;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #resultado {
+      display: none;
+      margin-top: 22px;
+      padding: 18px;
+      background: #eef7ee;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    .nota {
+      margin-top: 20px;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 15px;
+      color: #666;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Calculadora de Tijolos para Parede</h1>
+  <p>Descubra rapidamente quanto material sua obra pode precisar.</p>
+</header>
+
+<main>
+  <div class="card">
+
+    <label for="largura">Largura da parede (metros)</label>
+    <input id="largura" type="number" min="0" step="0.01" placeholder="Ex.: 5">
+
+    <label for="altura">Altura da parede (metros)</label>
+    <input id="altura" type="number" min="0" step="0.01" placeholder="Ex.: 2,8">
+
+    <label for="aberturas">Área total de portas e janelas (m²)</label>
+    <input id="aberturas" type="number" min="0" step="0.01" value="0">
+
+    <label for="tipo">Tipo de material</label>
+    <select id="tipo">
+      <option value="25">Bloco cerâmico 9 × 19 × 29 cm — aprox. 25/m²</option>
+      <option value="12.5">Bloco de concreto 14 × 19 × 39 cm — aprox. 12,5/m²</option>
+      <option value="33">Tijolo cerâmico 9 × 14 × 19 cm — aprox. 33/m²</option>
+    </select>
+
+    <label for="perda">Margem para perdas</label>
+    <select id="perda">
+      <option value="5">5%</option>
+      <option value="10" selected>10%</option>
+      <option value="15">15%</option>
+    </select>
+
+    <button id="calcular">Calcular materiais</button>
+
+    <div id="resultado"></div>
+
+    <div class="nota">
+      <strong>Atenção:</strong> o resultado é uma estimativa. Dimensões das peças,
+      juntas, método construtivo e perdas reais podem alterar a quantidade necessária.
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Calculadora Obra — ferramentas gratuitas para facilitar seus cálculos.
+</footer>
+
+<script>
+  document.getElementById("calcular").addEventListener("click", function () {
+    const largura = Number(document.getElementById("largura").value);
+    const altura = Number(document.getElementById("altura").value);
+    const aberturas = Number(document.getElementById("aberturas").value) || 0;
+    const pecasM2 = Number(document.getElementById("tipo").value);
+    const perda = Number(document.getElementById("perda").value);
+
+    const resultado = document.getElementById("resultado");
+
+    if (largura <= 0 || altura <= 0 || aberturas < 0) {
+      resultado.style.display = "block";
+      resultado.innerHTML = "Informe medidas válidas para realizar o cálculo.";
+      return;
+    }
+
+    const areaBruta = largura * altura;
+    const areaLiquida = areaBruta - aberturas;
+
+    if (areaLiquida <= 0) {
+      resultado.style.display = "block";
+      resultado.innerHTML = "A área de portas e janelas não pode ser igual ou maior que a parede.";
+      return;
+    }
+
+    const semPerda = areaLiquida * pecasM2;
+    const quantidade = Math.ceil(semPerda * (1 + perda / 100));
+
+    resultado.style.display = "block";
+    resultado.innerHTML =
+      "<strong>Resultado estimado</strong><br>" +
+      "Área da parede: " + areaBruta.toFixed(2) + " m²<br>" +
+      "Área útil: " + areaLiquida.toFixed(2) + " m²<br>" +
+      "Quantidade aproximada: <strong>" + quantidade + " peças</strong><br>" +
+      "Margem de perda incluída: " + perda + "%";
+  });
+</script>
+
+</body>
+</html>
